@@ -198,7 +198,7 @@ Adjust the form to use simple_form-builder:
   </tbody>
 </table>
 
-All other options are passed as html-options to text_field-element. All `data-attributes` to the javascript date_picker-implementation. 
+All other options are passed as html-options to text_field-element. All `data-attributes` are passed to the javascript date_picker-implementation. 
 
 
 ## Internationalization
