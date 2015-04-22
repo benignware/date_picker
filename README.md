@@ -228,9 +228,9 @@ You may want to change the i18n-identifier names by editing the configuration:
 # config/initializers/date_picker.rb
 DatePicker.configure do |config|
   config.formats = {
-    date: :picker,
-    datetime: :picker,
-    time: :picker_only_time
+    date: :default,
+    datetime: :default,
+    time: :only_time
   }
 end
 ```
