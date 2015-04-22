@@ -13,3 +13,6 @@ test/dummy/.sass-cache
 
 # Eclipse
 .project
+
+# Bower components
+test/dummy/vendor/assets/components
