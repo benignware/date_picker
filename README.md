@@ -143,7 +143,7 @@ Add date_picker-helpers to form-view:
 
 ### SimpleForm
 
-Make sure, you added [simple_form](http://github.com/platatec/simple_form) to your bundle and have run the install-generator, i.e. `rails g simple_form:install --bootstrap`.
+Make sure, you added [simple_form](https://github.com/plataformatec/simple_form) to your bundle and have run the install-generator, i.e. `rails g simple_form:install --bootstrap`.
 
 Run date_picker's simple_form-generator in order to create the date_picker-component:
 ```cli
