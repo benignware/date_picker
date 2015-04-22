@@ -3,13 +3,15 @@ module DatePicker
   module FormTagHelper
     
     def date_picker_tag(name, value, options = {})
-      
+
       options[:type]||= :date
-      options[:time_zone]||= true
+      options[:time_zone]||= false
       options[:data]||= {}
       options[:id]||= "date_picker_" + Digest::SHA1.hexdigest(name.to_s)[8..16]
       
       type = options[:type]
+      
+      puts "GO FOR IT: " + name + "....." + type.to_s
             
       # Get Type format if not specified
       if options[:format].present?
@@ -33,6 +35,8 @@ module DatePicker
         format = format.to_s
       end
       
+      
+      
       if options[:style].present?
         style = options[:style]
       elsif DatePicker.config.style.present?
@@ -41,18 +45,27 @@ module DatePicker
         style = :bootstrap
       end
       
+      
+      
       path = File.join(File.dirname(__FILE__), "styles", style.to_s)
       
       require path
       
       obj = Object::const_get('DatePicker::Styles::' + style.to_s.classify).new
       
+      
+      
       types = [:date]
       if obj.respond_to?(:types)
         types = obj.send(:types)
       end
       
+      
+      
       formatted_value = value.present? ? value.strftime(format) : nil
+      
+      
+      
       
       input_options = options.except(:time_zone, :format, :input_tag, :type)
       
@@ -87,7 +100,9 @@ module DatePicker
         format.gsub!("%z", mapping[:z])
       else
         # Strip time zone and trim result
-        format.gsub!("%Z", "").gsub!("%z", "").strip!
+        format.gsub!("%Z", "")
+        format.gsub!("%z", "")
+        format.strip!
       end
       
       mapping.each_pair do |k, v|
@@ -108,7 +123,10 @@ module DatePicker
         data_format.gsub!("%z", mapping[:z])
       else
         # Strip time zone and trim result
-        data_format.gsub!("%Z", "").gsub!("%z", "").strip!
+        # Strip time zone and trim result
+        format.gsub!("%Z", "")
+        format.gsub!("%z", "")
+        format.strip!
       end
       
       mapping.each_pair do |k, v|
@@ -177,7 +195,7 @@ module DatePicker
       
       result = ERB.new(tmpl).result(OpenStruct.new(vars).instance_eval { binding })
       
-      return result
+      return result.html_safe
       
     end
     
