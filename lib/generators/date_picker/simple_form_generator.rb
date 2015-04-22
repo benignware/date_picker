@@ -7,7 +7,7 @@ module DatePicker
       source_root File.expand_path('../templates', __FILE__)
       
       def create_input
-        template 'date_picker_input.erb', "app/inputs/" + self.name + "_input.rb", {name: self.name}
+        template 'inputs/date_picker_input.erb', "app/inputs/" + self.name + "_input.rb", {name: self.name}
       end
       
     end
