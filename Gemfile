@@ -13,3 +13,5 @@ gemspec
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
 
+gem 'simple_form'
+gem 'rails-i18n', '~> 4.0.0' # For 4.0.x

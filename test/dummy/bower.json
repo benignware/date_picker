@@ -1,0 +1,21 @@
+{
+  "name": "dummy",
+  "version": "0.0.0",
+  "homepage": "https://github.com/benignware/date_picker",
+  "authors": [
+    "Rafael Nowrotek <mail@benignware.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "eonasdan-bootstrap-datetimepicker": "~4.7.14",
+    "jquery-ui": "~1.11.4",
+    "bootstrap": "~3.3.4"
+  }
+}

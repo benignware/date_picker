@@ -10,4 +10,8 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+//= require jquery/dist/jquery.min
+//= require moment/min/moment.min
+//= require moment/min/locales.min
+//= require eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min
 //= require_tree .
