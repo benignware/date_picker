@@ -11,8 +11,17 @@ module DatePicker
       
       type = options[:type]
       
-      puts "GO FOR IT: " + name + "....." + type.to_s
-            
+      if value.blank?
+        case type
+          when :date
+            value = Date.today
+          when :datetime
+            value = DateTime.now
+          when :time
+            value = Time.now
+        end
+      end
+      
       # Get Type format if not specified
       if options[:format].present?
         format = options[:format]
@@ -35,8 +44,6 @@ module DatePicker
         format = format.to_s
       end
       
-      
-      
       if options[:style].present?
         style = options[:style]
       elsif DatePicker.config.style.present?
@@ -45,8 +52,6 @@ module DatePicker
         style = :bootstrap
       end
       
-      
-      
       path = File.join(File.dirname(__FILE__), "styles", style.to_s)
       
       require path
@@ -54,18 +59,12 @@ module DatePicker
       obj = Object::const_get('DatePicker::Styles::' + style.to_s.classify).new
       
       
-      
       types = [:date]
       if obj.respond_to?(:types)
         types = obj.send(:types)
       end
       
-      
-      
       formatted_value = value.present? ? value.strftime(format) : nil
-      
-      
-      
       
       input_options = options.except(:time_zone, :format, :input_tag, :type)
       
@@ -136,7 +135,22 @@ module DatePicker
       object_name = name.gsub(/\[\w*\]$/, "")
       attribute_name = name.gsub(/.*\[(\w*)\]$/, "\\1")
       
-      # Fallback
+      
+      is_mobile = (request.headers["HTTP_USER_AGENT"].present? && request.headers["HTTP_USER_AGENT"] =~ /\b(Mobile|webOS|Android|iPhone|iPad|iPod|Windows Phone|Opera Mobi|Kindle|BackBerry|PlayBook)\b/i).present?
+      
+      # Mobile fallback
+      if is_mobile
+        case options[:type]
+        when :date
+          return date_field(object_name, attribute_name, input_options.merge({type: 'date', value: value}))
+        when :datetime
+          return datetime_field(object_name, attribute_name, input_options.merge({type: 'datetime-local', value: value.strftime("%Y-%m-%dT%H:%M:%S")}))
+        when :time
+          return time_field(object_name, attribute_name, input_options.merge({type: 'time', value: value.strftime("%H:%M")}))
+        end
+      end
+      
+      # Desktop Fallback
       if !types.include?(options[:type])
         case options[:type]
         when :date

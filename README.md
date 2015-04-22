@@ -234,3 +234,7 @@ DatePicker.configure do |config|
   }
 end
 ```
+
+
+## Mobile
+On mobile devices the plugin falls back to date_field-helpers using html5-input-types.
