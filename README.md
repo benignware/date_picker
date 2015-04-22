@@ -211,7 +211,7 @@ gem 'rails-i18n', '~> 4.0.0' # For 4.0.x
 
 By default, the plugin looks for strftime-patterns in the following locations:
 ```
-# config/locales/fr.yml
+# config/locales/en.yml
 en:
   date:
     formats:
