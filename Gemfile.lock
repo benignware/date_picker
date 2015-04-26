@@ -1,8 +1,8 @@
 PATH
   remote: .
   specs:
-    date_picker (0.0.4)
-      rails (~> 4.2.1)
+    date_picker (0.0.5)
+      rails (>= 4.0.3)
 
 GEM
   remote: https://rubygems.org/
