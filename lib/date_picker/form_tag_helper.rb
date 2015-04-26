@@ -23,11 +23,13 @@ module DatePicker
       end
       
       # Get Type format if not specified
+      format = nil
       if options[:format].present?
         format = options[:format]
-      else
+      elsif DatePicker.config.formats.present?
         format = DatePicker.config.formats[type]
       end
+      
       if format.blank? || !format.is_a?(String)
         case type
           when :date
@@ -51,6 +53,9 @@ module DatePicker
       else
         style = :bootstrap
       end
+      
+      
+      
       
       path = File.join(File.dirname(__FILE__), "styles", style.to_s)
       
