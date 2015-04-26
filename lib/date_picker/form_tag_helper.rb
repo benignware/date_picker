@@ -162,6 +162,10 @@ module DatePicker
         end
       end
       
+      # Use type text on desktop
+      input_options[:type] = :text
+      
+      
       tmpl = obj.template
       
       # i18n
