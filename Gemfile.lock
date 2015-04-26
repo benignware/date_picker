@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    date_picker (0.0.1)
+    date_picker (0.0.2)
       rails (~> 4.2.1)
 
 GEM
