@@ -1,6 +1,11 @@
 # date_picker
 > Rails DatePicker-Integration
 
+* Supports bootstrap-datetimepicker and jquery_ui-datepicker
+* Seamless i18n-Integration
+* FormBuilder- and SimpleForm-Helpers for date, datetime and time-attributes
+* HTML5-Fallback on Mobile
+
 ## Install
 
 Add the following to your Gemfile:
