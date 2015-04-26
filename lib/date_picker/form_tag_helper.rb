@@ -66,7 +66,7 @@ module DatePicker
       
       formatted_value = value.present? ? value.strftime(format) : nil
       
-      input_options = options.except(:time_zone, :format, :input_tag, :type)
+      input_options = options.except(:time_zone, :format, :input_tag, :type, :pattern)
       
       if obj.respond_to?(:options)
         input_options = input_options.merge(obj.send(:options))
