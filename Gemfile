@@ -15,3 +15,4 @@ gemspec
 
 gem 'simple_form'
 gem 'rails-i18n', '~> 4.0.0' # For 4.0.x
+gem "sqlite3"
