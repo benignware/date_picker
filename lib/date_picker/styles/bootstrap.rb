@@ -15,7 +15,7 @@ module DatePicker
       def template() 
         %{
           <div id="<%= input_id %>_container" class="input-group">
-            <div class="input-group-addon">
+            <div class="input-group-addon" style="cursor: pointer">
               <span class="glyphicon glyphicon-calendar"></span>
             </div>
             <%= input_html %>
