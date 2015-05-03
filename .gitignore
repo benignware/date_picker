@@ -10,6 +10,7 @@ test/dummy/.sass-cache
 
 # GFM
 .README.md.html
+.CHANGELOG.md.html
 
 # Eclipse
 .project
