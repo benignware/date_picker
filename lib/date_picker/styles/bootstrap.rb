@@ -30,7 +30,7 @@ module DatePicker
                 .on('dp.change', function(e) {
                   $('#<%= input_id %>_hidden').val(e.date.format('<%= data_format %>'));
                 }).data('DateTimePicker');
-                <% if time %> datepicker.date(moment.utc(new Date(<%= time %>))); <% end %>
+                <% if time %> datepicker.date(moment(new Date(<%= time %>))); <% end %>
             })();
           </script>
         }
