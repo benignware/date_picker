@@ -243,7 +243,7 @@ end
 > When using `bootstrap-datetimepicker` you will probably need to install dev-branch due to [#1019](https://github.com/Eonasdan/bootstrap-datetimepicker/issues/1019):
 
 ``` 
-bower install eonasdan-bootstrap-datetimepicker#development
+bower install eonasdan-bootstrap-datetimepicker#development --save
 ```
 
 ## Mobile
