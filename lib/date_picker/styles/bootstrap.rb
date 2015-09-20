@@ -23,14 +23,16 @@ module DatePicker
           <input id="<%= input_id %>_hidden" type="hidden" value="<%= formatted_value %>" name="<%= name %>"/>
           <script>
             (function() {
-              var datepicker = $('#<%= input_id %>_container').datetimepicker($.extend({}, <%= json_options %>, {
+              var
+                datepicker = $('#<%= input_id %>_container').datetimepicker($.extend({}, <%= json_options %>, {
                   locale: <%= locale.to_json %>,
                   format: <%= format.to_json %>
                 }))
                 .on('dp.change', function(e) {
                   $('#<%= input_id %>_hidden').val(e.date.format('<%= data_format %>'));
-                }).data('DateTimePicker');
-                <% if time %> datepicker.date(moment(new Date(<%= time %>))); <% end %>
+                }).data('DateTimePicker'),
+                date = new Date(<%= time; %>);
+              datepicker.date(moment<% if type.to_s == 'time' %>.utc(date)<% else %>(date)<% end %>)
             })();
           </script>
         }
