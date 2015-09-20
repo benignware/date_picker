@@ -22,6 +22,7 @@ module DatePicker
         end
       end
       
+      
       # Get Type format if not specified
       format = nil
       if options[:format].present?
@@ -46,6 +47,9 @@ module DatePicker
         format = format.to_s
       end
       
+      # Get formatted value
+      formatted_value = value.present? ? I18n.l(value, format: format.to_s) : nil
+      
       if options[:style].present?
         style = options[:style]
       elsif DatePicker.config.style.present?
@@ -54,13 +58,10 @@ module DatePicker
         style = :bootstrap
       end
       
-      
-      
-      
       path = File.join(File.dirname(__FILE__), "styles", style.to_s)
       
+      # Require the selected style and retrieve as object
       require path
-      
       obj = Object::const_get('DatePicker::Styles::' + style.to_s.classify).new
       
       
@@ -68,8 +69,6 @@ module DatePicker
       if obj.respond_to?(:types)
         types = obj.send(:types)
       end
-      
-      formatted_value = value.present? ? value.strftime(format) : nil
       
       input_options = options.except(:time_zone, :format, :input_tag, :type, :pattern)
       
@@ -182,14 +181,13 @@ module DatePicker
       day_names = I18n.t('date.day_names', default: Date::DAYNAMES)
       abbr_day_names = I18n.t('date.abbr_day_names', default: Date::ABBR_DAYNAMES)
       
-      time = value.present? ? value.to_datetime.utc.to_i * 1000 : 0
+      time = value.present? ? type == :time ? value.localtime.utc.to_i * 1000 : value.to_time.utc.to_i * 1000 : 0
       
       camelized_keys = 
         lambda do |h| 
           Hash === h ? 
             Hash[
               h.map do |k, v| 
-                puts k
                 key = k.to_s().camelize
                 key = key[0, 1].downcase + key[1..-1]
                 [key, camelized_keys[v]] 
