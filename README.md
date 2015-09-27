@@ -39,7 +39,7 @@ config.assets.paths << Rails.root.join('vendor', 'assets', 'components')
 
 ### Bootstrap DateTimePicker
 
-Bootstrap is supported by the integration of [eonasdan-bootstrap-datetimepicker](https://github.com/Eonasdan/bootstrap-datetimepicker). 
+Bootstrap is supported by the integration of [eonasdan-bootstrap-datetimepicker](https://github.com/Eonasdan/bootstrap-datetimepicker) >= 4.17.37
 
 Run the config-generator using `:bootstrap`
 ```cli
@@ -239,8 +239,6 @@ DatePicker.configure do |config|
   }
 end
 ```
-
-> When using `bootstrap-datetimepicker` you will probably need to install dev-branch due to [#1019](https://github.com/Eonasdan/bootstrap-datetimepicker/issues/1019):
 
 ``` 
 bower install eonasdan-bootstrap-datetimepicker#development --save
