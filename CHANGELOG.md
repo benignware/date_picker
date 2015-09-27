@@ -1,3 +1,17 @@
+date_picker
+===========
+
+> Changelog
+
+Master
+------
+
+Bugfix
+
+* Fixed localized names not respected in formatted value
+* Fixed wrong timezone offset in time type
+
+
 v0.0.6
 ------
 
