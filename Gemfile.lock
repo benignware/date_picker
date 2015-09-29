@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    date_picker (0.0.6)
+    date_picker (0.0.7)
       rails (>= 4.0.3)
 
 GEM
@@ -112,3 +112,6 @@ DEPENDENCIES
   rails-i18n (~> 4.0.0)
   simple_form
   sqlite3
+
+BUNDLED WITH
+   1.10.6
