@@ -3,10 +3,10 @@ date_picker
 
 > Changelog
 
-Master
+v0.0.7
 ------
 
-Bugfix
+#### Bugfix
 
 * Fixed localized names not respected in formatted value
 * Fixed wrong timezone offset in time type
