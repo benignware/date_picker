@@ -22,4 +22,4 @@
 de:
   time:
     formats:
-      only_time: "%H:%M:%S Uhr"
+      only_time: "%H:%M Uhr"
