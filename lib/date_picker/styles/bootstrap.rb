@@ -32,7 +32,9 @@ module DatePicker
                   $('#<%= input_id %>_hidden').val(e.date.format('<%= data_format %>'));
                 }).data('DateTimePicker'),
                 date = new Date(<%= time; %>);
-              datepicker.date(moment<% if type.to_s == 'time' %>.utc(date)<% else %>(date)<% end %>)
+              <% if type.to_s == 'datetime' %>
+                datepicker.date(moment(date))
+              <% end %>
             })();
           </script>
         }
