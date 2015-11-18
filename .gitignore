@@ -16,4 +16,4 @@ test/dummy/.sass-cache
 .project
 
 # Bower components
-test/dummy/vendor/assets/components
+#test/dummy/vendor/assets/components
