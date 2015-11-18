@@ -3,6 +3,13 @@ date_picker
 
 > Changelog
 
+v0.0.8
+------
+
+#### Bugfix
+
+* Fixed timestamp parsing fails on type time
+
 v0.0.7
 ------
 
