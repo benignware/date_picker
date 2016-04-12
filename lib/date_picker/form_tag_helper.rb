@@ -227,7 +227,7 @@ module DatePicker
     
     def time_picker_tag(name, value, options = {})
       options[:type]||= :time
-      datetime_picker_tag(name, value, options)
+      date_picker_tag(name, value, options)
     end
     
   end
