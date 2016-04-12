@@ -221,12 +221,16 @@ module DatePicker
     end
     
     def datetime_picker_tag(name, value, options = {})
-      options[:type]||= :datetime
+      options = options.clone.merge({
+        type: :datetime
+      })
       date_picker_tag(name, value, options)
     end
     
     def time_picker_tag(name, value, options = {})
-      options[:type]||= :time
+      options = options.clone.merge({
+        type: :time
+      })
       date_picker_tag(name, value, options)
     end
     
