@@ -1,0 +1,35 @@
+<%= form_for(@event) do |f| %>
+  <% if @event.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@event.errors.count, "error") %> prohibited this event from being saved:</h2>
+
+      <ul>
+      <% @event.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field form-group">
+    <%= f.date_picker :date %>
+    <em><%= I18n.l(@event.date) %></em><br/>
+    <code><%= @event.date.to_s %></code>
+  </div>
+  
+  <div class="field form-group">
+    <%= f.datetime_picker :datetime %>
+    <em><%= I18n.l(@event.datetime) %></em><br/>
+    <code><%= @event.datetime.to_s %></code>
+  </div>
+  
+  <div class="field form-group">
+    <%= f.time_picker :time %>
+    <em><%= I18n.l(@event.time, format: :only_time) %></em><br/>
+    <code><%= @event.time.to_s %></code>
+  </div>
+  
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
