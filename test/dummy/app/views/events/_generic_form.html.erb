@@ -12,7 +12,7 @@
   <% end %>
 
   <div class="field form-group">
-    <%= f.date_picker :date %>
+    <%= f.date_picker :date, {default: Date.tomorrow}, data: {stepping: true} %>
     <% if @event.date.present? %>
     <em><%= I18n.l(@event.date) %></em><br/>
     <code><%= @event.date.to_s %></code>

@@ -24,20 +24,20 @@ module DatePicker
           <script>
             (function() {
               var
-                initialized = false,
                 tz = '<%= time_zone %>',
-                date = new Date('<%= value.strftime('%Y/%m/%d %H:%M:%S %z'); %>'),
-                m = moment(date).tz(tz),
-                datepicker = $('#<%= input_id %>_container').datetimepicker($.extend({}, <%= json_options %>, {
+                date = <% if value.present? %>new Date('<%= value.strftime('%Y/%m/%d %H:%M:%S %z'); %>')<% else %>nil<% end %>,
+                m = date && moment(date).tz(tz),
+                datepicker = $('#<%= input_id %>_container').datetimepicker($.extend({}, <%= picker_options %>, {
                   locale: <%= locale.to_json %>,
                   format: <%= format.to_json %>,
-                  //defaultDate: m,
                   timeZone: null
                 })).on('dp.show', function(e) {
                 }).on('dp.change', function(e) {
                   $('#<%= input_id %>_hidden').val(e.date.format('<%= data_format %>'));
                 }).data('DateTimePicker')
-                datepicker.date(m)
+                if (m) {
+                  datepicker.date(m)
+                }
               
               console.log("date: ", date, m, tz);
             })();

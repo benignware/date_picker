@@ -13,19 +13,19 @@ module DatePicker
     
     module FormBuilderMethods
       
-      def date_picker(attribute, options = {})
-        options[:id]||= DatePicker::FormHelper.field_id(self.object_name, attribute)
-        @template.date_picker_tag("#{self.object_name}[#{attribute}]", self.object.send(attribute), options)
+      def date_picker(attribute, options = {}, html_options = {})
+        html_options[:id]||= DatePicker::FormHelper.field_id(self.object_name, attribute)
+        @template.date_picker_tag("#{self.object_name}[#{attribute}]", self.object.send(attribute), options, html_options)
       end
       
-      def datetime_picker(attribute, options = {})
-        options[:id]||= DatePicker::FormHelper.field_id(self.object_name, attribute)
-        @template.datetime_picker_tag("#{self.object_name}[#{attribute}]", self.object.send(attribute), options)
+      def datetime_picker(attribute, options = {}, html_options = {})
+        html_options[:id]||= DatePicker::FormHelper.field_id(self.object_name, attribute)
+        @template.datetime_picker_tag("#{self.object_name}[#{attribute}]", self.object.send(attribute), options, html_options)
       end
       
-      def time_picker(attribute, options = {})
-        options[:id]||= DatePicker::FormHelper.field_id(self.object_name, attribute)
-        @template.time_picker_tag("#{self.object_name}[#{attribute}]", self.object.send(attribute), options)
+      def time_picker(attribute, options = {}, html_options = {})
+        html_options[:id]||= DatePicker::FormHelper.field_id(self.object_name, attribute)
+        @template.time_picker_tag("#{self.object_name}[#{attribute}]", self.object.send(attribute), options, html_options)
       end
       
     end

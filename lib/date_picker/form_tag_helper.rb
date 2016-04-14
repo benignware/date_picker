@@ -3,30 +3,48 @@ require 'tzinfo'
 module DatePicker
   module FormTagHelper
     
-    def date_picker_tag(name, value, options = {})
+    def date_picker_tag(name, value, options = {}, html_options = nil)
 
-      options[:type]||= :date
-      options[:time_zone]||= false
-      options[:data]||= {}
-      options[:id]||= "date_picker_" + Digest::SHA1.hexdigest(name.to_s)[8..16]
+      option_names = [:time_zone, :format, :type, :pattern, :default]
+
+      options||= {}
+      options = options.slice(*option_names)
+      options = ({
+        type: :date,
+        time_zone: false,
+      }).merge(options)
+            
+      html_options||= {}
+      # Merge html_options with options
+      html_options = ({
+        # Use text-type as default instead of date, since Datepicker should not mix up with native html5 components
+        type: :text,
+        # Generate unique ID with UI
+        id: "date_picker_" + Digest::SHA1.hexdigest(name.to_s)[8..16]
+      }.merge(options.except(*option_names))).merge(html_options)
+      
+      
+      
+      puts '**** options: ' + options.to_s
+      puts '**** html-options: ' + html_options.to_s
       
       type = options[:type]
       
-      if value.blank?
+      if !options.key?(:default)
         case type
           when :date
-            value = Date.today.in_time_zone.to_date
+            default = Date.today.in_time_zone.to_date
           when :datetime
-            value = DateTime.now.in_time_zone
+            default = DateTime.now.in_time_zone
           when :time
-            value = Time.now.in_time_zone
+            default = Time.now.in_time_zone
         end
+      else
+        default = options[:default]
       end
       
-      if value.present?
-        if type != :time
-          #value = value.in_time_zone
-        end
+      if value.blank?
+        value = default
       end
       
       puts '*** ' + DateTime.now.in_time_zone.to_time.utc.to_s
@@ -59,6 +77,7 @@ module DatePicker
       # Get formatted value
       formatted_value = value.present? ? I18n.l(value, format: format.to_s) : nil
       
+      # Get Style
       if options[:style].present?
         style = options[:style]
       elsif DatePicker.config.style.present?
@@ -66,7 +85,6 @@ module DatePicker
       else
         style = :bootstrap
       end
-      
       path = File.join(File.dirname(__FILE__), "styles", style.to_s)
       
       # Require the selected style and retrieve as object
@@ -79,12 +97,11 @@ module DatePicker
         types = obj.send(:types)
       end
       
-      input_options = options.except(:time_zone, :format, :input_tag, :type, :pattern)
-      
       if obj.respond_to?(:options)
-        input_options = input_options.merge(obj.send(:options))
+        html_options = html_options.merge(obj.send(:options))
       end
       
+      # Get mapping
       if obj.mapping.present?
         mapping = obj.mapping
       end
@@ -92,19 +109,18 @@ module DatePicker
       if obj.mapping.is_a? Symbol
         mapping = DatePicker::Mappings.send(obj.mapping)
       end
-      
-      input_options[:type] = :text
-      input_options[:value] = formatted_value
-      
-      input_tag = options[:tag] || :input
-      input_id = options[:id]
-      input_html = content_tag(input_tag, nil, input_options)
 
-      # Escape special chars
+      # Setup html input
+      input_tag = :input
+      input_id = html_options[:id]
+      input_html = content_tag(input_tag, nil, html_options)
+
+      # Escape special chars in format
       if mapping[:_].present?
         format.gsub!(/(?<!%)([a-z]+)/i, mapping[:_].gsub(/\*/, "\\\\1"))
       end
       
+      # Replace timezone identifier in format
       if options[:time_zone]
         # Time zone abbreviation name
         format.gsub!("%Z", value.present? ? value.to_datetime.strftime("%Z") : "")
@@ -128,14 +144,14 @@ module DatePicker
         data_format = "%Y-%m-%d %H:%M:%S %z"
       end
       
+      # If time_zone option is specified, replace timezone identifier with mapping in data_format
       if options[:time_zone]
         # Time zone abbreviation name
         data_format.gsub!("%Z", value.present? ? value.to_datetime.strftime("%Z") : "")
         # Time zone as hour and minute offset from UTC (e.g. +0900)
         data_format.gsub!("%z", mapping[:z])
       else
-        # Strip time zone and trim result
-        # Strip time zone and trim result
+        # Otherwise strip time zone and trim result
         format.gsub!("%Z", "")
         format.gsub!("%z", "")
         format.strip!
@@ -148,18 +164,16 @@ module DatePicker
       object_name = name.gsub(/\[\w*\]$/, "")
       attribute_name = name.gsub(/.*\[(\w*)\]$/, "\\1")
       
-      
+      # Mobile Fallback
       is_mobile = (request.headers["HTTP_USER_AGENT"].present? && request.headers["HTTP_USER_AGENT"] =~ /\b(Mobile|webOS|Android|iPhone|iPad|iPod|Windows Phone|Opera Mobi|Kindle|BackBerry|PlayBook)\b/i).present?
-      
-      # Mobile fallback
       if is_mobile
         case options[:type]
         when :date
-          return date_field(object_name, attribute_name, input_options.merge({type: 'date', value: value}))
+          return date_field(object_name, attribute_name, html_options.merge({type: 'date', value: value.present? ? value : ''}))
         when :datetime
-          return datetime_field(object_name, attribute_name, input_options.merge({type: 'datetime-local', value: value.strftime("%Y-%m-%dT%H:%M:%S")}))
+          return datetime_field(object_name, attribute_name, html_options.merge({type: 'datetime-local', value: value.present? ? value.strftime("%Y-%m-%dT%H:%M:%S") : ''}))
         when :time
-          return time_field(object_name, attribute_name, input_options.merge({type: 'time', value: value.strftime("%H:%M")}))
+          return time_field(object_name, attribute_name, html_options.merge({type: 'time', value: value.present? ? value.strftime("%H:%M") : ''}))
         end
       end
       
@@ -167,18 +181,16 @@ module DatePicker
       if !types.include?(options[:type])
         case options[:type]
         when :date
-          return date_select(object_name, attribute_name, {default: value}, input_options)
+          return date_select(object_name, attribute_name, {default: value}, html_options)
         when :datetime
-          return datetime_select(object_name, attribute_name, {default: value}, input_options)
+          return datetime_select(object_name, attribute_name, {default: value}, html_options)
         when :time
-          return time_select(object_name, attribute_name, {default: value}, input_options)
+          return time_select(object_name, attribute_name, {default: value}, html_options)
         end
       end
       
-      # Use type text on desktop
-      input_options[:type] = :text
       
-      
+      # Get builder reference
       tmpl = obj.template
       
       # i18n
@@ -193,29 +205,10 @@ module DatePicker
       time = value.present? ? type == :time ? value.localtime.utc.to_i * 1000 : value.to_time.utc.to_i * 1000 : 0
       #time = value.to_time.utc.to_i * 1000
       
-      timezone = type === :time ? 'Etc/UTC' : Time.zone.name
-      timezone = value.to_datetime.zone
-      timezone = ::ActiveSupport::TimeZone.const_get('MAPPING')[timezone]
-      timezone = type === :time ? value.to_datetime.zone : ::ActiveSupport::TimeZone.const_get('MAPPING')[Time.zone.name] 
-      timezone = value.strftime('%z')
-      
-      #offset_in_hours = (::ActiveSupport::TimeZone.get(timezone).current_period.offset.utc_offset).to_f / 3600.0
-      utc_offset = value.in_time_zone.utc_offset
-      
-      puts ActiveSupport::TimeZone.zones_map.to_s
-      
-      dst = Time.zone.tzinfo.current_period.utc_offset / 3600
-      
-      puts '**** zone: ' + timezone.to_s + " ---  dst:" + Time.zone.tzinfo.name.to_s + ", " + ( utc_offset / 3600 ).to_s
-      
-      timezone = ::ActiveSupport::TimeZone[dst];
-      puts '**** 1: ' + timezone.to_s
-      
-      timezone = ::ActiveSupport::TimeZone.const_get('MAPPING')[timezone.name]
-      puts '**** 2: ' + timezone.to_s
-      
+      # Setup picker timezone
       timezone = type === :time && value.utc_offset === 0 ? 'UTC' : Time.zone.tzinfo.name
       
+      # Build JSON Options
       camelized_keys = 
         lambda do |h| 
           Hash === h ? 
@@ -227,8 +220,10 @@ module DatePicker
               end 
             ] : h 
         end
+        
+      # Get data-attributes with camelized keys to pass to the picker instance by javascript
+      picker_options = camelized_keys[html_options[:data]].to_json
       
-      json_options = camelized_keys[input_options[:data]].to_json
       
       vars = {
         type: type,
@@ -238,7 +233,7 @@ module DatePicker
         data_format: data_format,
         name: name,
         input_id: input_id,
-        input_options: input_options,
+        html_options: html_options,
         time: time,
         time_zone: timezone,
         input_html: input_html, 
@@ -254,18 +249,18 @@ module DatePicker
       
     end
     
-    def datetime_picker_tag(name, value, options = {})
+    def datetime_picker_tag(name, value, options = {}, html_options = {})
       options = options.clone.merge({
         type: :datetime
       })
-      date_picker_tag(name, value, options)
+      date_picker_tag(name, value, options, html_options)
     end
     
-    def time_picker_tag(name, value, options = {})
+    def time_picker_tag(name, value, options = {}, html_options = {})
       options = options.clone.merge({
         type: :time
       })
-      date_picker_tag(name, value, options)
+      date_picker_tag(name, value, options, html_options)
     end
     
   end
