@@ -193,6 +193,10 @@ Adjust the form to use simple_form-builder:
       <td>The data-type of the input, e.g. :date</td>
     </tr>
     <tr>
+      <td>default</td>
+      <td>The default value for the input. Defaults to current</td>
+    </tr>
+    <tr>
       <td>format</td>
       <td>Provide a strftime-pattern as string or a i18n-identifier as a symbol</td>
     </tr>
