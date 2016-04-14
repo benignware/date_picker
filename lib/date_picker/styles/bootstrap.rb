@@ -39,8 +39,6 @@ module DatePicker
                 if (date) {
                   datepicker.date(m)
                 }
-              
-              console.log("date: ", date, m, tz);
             })();
           </script>
         }
