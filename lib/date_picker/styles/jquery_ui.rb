@@ -19,11 +19,10 @@ module DatePicker
                 dayNames: <%= day_names.to_json %>,
                 dayNamesMin: <%= abbr_day_names.to_json %>,
                 dayNamesShort: <%= abbr_day_names.to_json %>
-              }, <%= json_options %>, {
+              }, <%= picker_options %>, {
                 locale: <%= locale.to_json %>,
                 dateFormat: <%= format.to_json %>
               })).on('change', function(e) {
-                console.log("change: ", $('#<%= input_id %>').val());
                 $('#<%= input_id %>_hidden').val($.datepicker.formatDate('<%= data_format %>', $('#<%= input_id %>').datepicker('getDate')));
               });
               <% if time %> $('#<%= input_id %>').datepicker('setDate', new Date(<%= time %>)); <% end %>
