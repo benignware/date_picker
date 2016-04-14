@@ -33,7 +33,7 @@ module DatePicker
                   format: <%= format.to_json %>,
                   timeZone: null
                 })).on('dp.change', function(e) {
-                  var d = moment(e.date).tz(tz)
+                  var d = e.date
                   $('#<%= input_id %>_hidden').val(d.format('<%= data_format %>'));
                 }).data('DateTimePicker')
                 if (date) {
