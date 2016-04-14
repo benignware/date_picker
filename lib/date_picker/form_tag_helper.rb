@@ -6,9 +6,12 @@ module DatePicker
     def date_picker_tag(name, value, options = {}, html_options = nil)
 
       option_names = [:time_zone, :format, :type, :pattern, :default]
+      
+      opts = options.clone
+      html_opts = html_options.clone
 
       options||= {}
-      options = options.slice(*option_names)
+      options = opts.slice(*option_names)
       options = ({
         type: :date,
         time_zone: false,
@@ -16,17 +19,12 @@ module DatePicker
             
       html_options||= {}
       # Merge html_options with options
-      html_options = ({
+      html_options = {
         # Use text-type as default instead of date, since Datepicker should not mix up with native html5 components
         type: :text,
         # Generate unique ID with UI
         id: "date_picker_" + Digest::SHA1.hexdigest(name.to_s)[8..16]
-      }.merge(options.except(*option_names))).merge(html_options)
-      
-      
-      
-      puts '**** options: ' + options.to_s
-      puts '**** html-options: ' + html_options.to_s
+      }.merge(opts.except(*option_names)).merge(html_options)
       
       type = options[:type]
       
@@ -43,12 +41,15 @@ module DatePicker
         default = options[:default]
       end
       
+      # Override with value from html_options
+      if html_options.key?(:value)
+        value = html_options[:value]
+      end
+      
+      # Set default value if blank
       if value.blank?
         value = default
       end
-      
-      puts '*** ' + DateTime.now.in_time_zone.to_time.utc.to_s
-      puts '*** ' + type.to_s + ', VALUE: ' + value.to_s
       
       # Get Type format if not specified
       format = nil
@@ -58,6 +59,7 @@ module DatePicker
         format = DatePicker.config.formats[type]
       end
       
+      # Apply string format identifier or default format
       if format.blank? || !format.is_a?(String)
         case type
           when :date
@@ -74,8 +76,6 @@ module DatePicker
         format = format.to_s
       end
       
-      # Get formatted value
-      formatted_value = value.present? ? I18n.l(value, format: format.to_s) : nil
       
       # Get Style
       if options[:style].present?
@@ -91,7 +91,7 @@ module DatePicker
       require path
       obj = Object::const_get('DatePicker::Styles::' + style.to_s.classify).new
       
-      
+      # Merge with types and options from style template
       types = [:date]
       if obj.respond_to?(:types)
         types = obj.send(:types)
@@ -101,11 +101,12 @@ module DatePicker
         html_options = html_options.merge(obj.send(:options))
       end
       
-      # Get mapping
+      # Get mapping from style
       if obj.mapping.present?
         mapping = obj.mapping
       end
-
+      
+      # Resolve mapping by identifier
       if obj.mapping.is_a? Symbol
         mapping = DatePicker::Mappings.send(obj.mapping)
       end
@@ -120,28 +121,29 @@ module DatePicker
         format.gsub!(/(?<!%)([a-z]+)/i, mapping[:_].gsub(/\*/, "\\\\1"))
       end
       
-      # Replace timezone identifier in format
+      # If time_zone option is specified, replace timezone identifier with mapping in format
       if options[:time_zone]
         # Time zone abbreviation name
         format.gsub!("%Z", value.present? ? value.to_datetime.strftime("%Z") : "")
         # Time zone as hour and minute offset from UTC (e.g. +0900)
         format.gsub!("%z", mapping[:z])
       else
-        # Strip time zone and trim result
+        # Otherwise strip time zone and trim result
         format.gsub!("%Z", "")
         format.gsub!("%z", "")
         format.strip!
       end
       
+      # Replace mappings in format
       mapping.each_pair do |k, v|
         format.gsub!("%" + k.to_s, v)
       end
       
-      # Set up the data format pattern
+      # Setup data format pattern
       if type == :date
         data_format = "%Y-%m-%d"
       else
-        data_format = "%Y-%m-%d %H:%M:%S %z"
+        data_format = "%Y-%m-%d %H:%M:%S" + ((format.include?("%z") || format.include?("%z")) && options[:time_zone] ? ' %z' : '')
       end
       
       # If time_zone option is specified, replace timezone identifier with mapping in data_format
@@ -150,17 +152,17 @@ module DatePicker
         data_format.gsub!("%Z", value.present? ? value.to_datetime.strftime("%Z") : "")
         # Time zone as hour and minute offset from UTC (e.g. +0900)
         data_format.gsub!("%z", mapping[:z])
-      else
-        # Otherwise strip time zone and trim result
-        format.gsub!("%Z", "")
-        format.gsub!("%z", "")
-        format.strip!
       end
       
+      # Replace mappings in data_format
       mapping.each_pair do |k, v|
         data_format.gsub!("%" + k.to_s, v)
       end
       
+      # Get formatted value
+      formatted_value = value.present? ? I18n.l(value, format: format.to_s) : nil
+
+      # Clean object and attribute names
       object_name = name.gsub(/\[\w*\]$/, "")
       attribute_name = name.gsub(/.*\[(\w*)\]$/, "\\1")
       
@@ -190,7 +192,7 @@ module DatePicker
       end
       
       
-      # Get builder reference
+      # Get builder template reference
       tmpl = obj.template
       
       # i18n
@@ -202,13 +204,21 @@ module DatePicker
       day_names = I18n.t('date.day_names', default: Date::DAYNAMES)
       abbr_day_names = I18n.t('date.abbr_day_names', default: Date::ABBR_DAYNAMES)
       
-      time = value.present? ? type == :time ? value.localtime.utc.to_i * 1000 : value.to_time.utc.to_i * 1000 : 0
-      #time = value.to_time.utc.to_i * 1000
+      # Setup timestamp
+      time = value.present? ? value.to_time.utc.to_i * 1000 : 0
       
-      # Setup picker timezone
-      timezone = type === :time && value.utc_offset === 0 ? 'UTC' : Time.zone.tzinfo.name
+      # Setup timezone
+      tz = Time.zone
+      if value.present?
+        utc_offset = (value.is_a?(Date) ? value.to_datetime : value).utc_offset
+        tz = ActiveSupport::TimeZone.all.select {
+          |zone|
+          zone.tzinfo.current_period.offset.utc_total_offset === utc_offset
+        }.first
+      end
+      timezone = type === :time && utc_offset === 0 ? 'Etc/UTC' : ActiveSupport::TimeZone::MAPPING[tz.name]
       
-      # Build JSON Options
+      # Setup Picker Options
       camelized_keys = 
         lambda do |h| 
           Hash === h ? 
@@ -220,11 +230,9 @@ module DatePicker
               end 
             ] : h 
         end
-        
-      # Get data-attributes with camelized keys to pass to the picker instance by javascript
       picker_options = camelized_keys[html_options[:data]].to_json
       
-      
+      # Setup other vars
       vars = {
         type: type,
         value: value,
