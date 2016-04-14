@@ -1,4 +1,5 @@
 require 'erb'
+require 'tzinfo'
 module DatePicker
   module FormTagHelper
     
@@ -14,14 +15,22 @@ module DatePicker
       if value.blank?
         case type
           when :date
-            value = Date.today
+            value = Date.today.in_time_zone.to_date
           when :datetime
-            value = DateTime.now
+            value = DateTime.now.in_time_zone
           when :time
-            value = Time.now
+            value = Time.now.in_time_zone
         end
       end
       
+      if value.present?
+        if type != :time
+          #value = value.in_time_zone
+        end
+      end
+      
+      puts '*** ' + DateTime.now.in_time_zone.to_time.utc.to_s
+      puts '*** ' + type.to_s + ', VALUE: ' + value.to_s
       
       # Get Type format if not specified
       format = nil
@@ -182,6 +191,30 @@ module DatePicker
       abbr_day_names = I18n.t('date.abbr_day_names', default: Date::ABBR_DAYNAMES)
       
       time = value.present? ? type == :time ? value.localtime.utc.to_i * 1000 : value.to_time.utc.to_i * 1000 : 0
+      #time = value.to_time.utc.to_i * 1000
+      
+      timezone = type === :time ? 'Etc/UTC' : Time.zone.name
+      timezone = value.to_datetime.zone
+      timezone = ::ActiveSupport::TimeZone.const_get('MAPPING')[timezone]
+      timezone = type === :time ? value.to_datetime.zone : ::ActiveSupport::TimeZone.const_get('MAPPING')[Time.zone.name] 
+      timezone = value.strftime('%z')
+      
+      #offset_in_hours = (::ActiveSupport::TimeZone.get(timezone).current_period.offset.utc_offset).to_f / 3600.0
+      utc_offset = value.in_time_zone.utc_offset
+      
+      puts ActiveSupport::TimeZone.zones_map.to_s
+      
+      dst = Time.zone.tzinfo.current_period.utc_offset / 3600
+      
+      puts '**** zone: ' + timezone.to_s + " ---  dst:" + Time.zone.tzinfo.name.to_s + ", " + ( utc_offset / 3600 ).to_s
+      
+      timezone = ::ActiveSupport::TimeZone[dst];
+      puts '**** 1: ' + timezone.to_s
+      
+      timezone = ::ActiveSupport::TimeZone.const_get('MAPPING')[timezone.name]
+      puts '**** 2: ' + timezone.to_s
+      
+      timezone = type === :time && value.utc_offset === 0 ? 'UTC' : Time.zone.tzinfo.name
       
       camelized_keys = 
         lambda do |h| 
@@ -207,6 +240,7 @@ module DatePicker
         input_id: input_id,
         input_options: input_options,
         time: time,
+        time_zone: timezone,
         input_html: input_html, 
         month_names: month_names,
         abbr_month_names: abbr_month_names,

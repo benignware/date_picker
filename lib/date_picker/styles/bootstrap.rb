@@ -24,17 +24,22 @@ module DatePicker
           <script>
             (function() {
               var
+                initialized = false,
+                tz = '<%= time_zone %>',
+                date = new Date('<%= value.strftime('%Y/%m/%d %H:%M:%S %z'); %>'),
+                m = moment(date).tz(tz),
                 datepicker = $('#<%= input_id %>_container').datetimepicker($.extend({}, <%= json_options %>, {
                   locale: <%= locale.to_json %>,
-                  format: <%= format.to_json %>
-                }))
-                .on('dp.change', function(e) {
+                  format: <%= format.to_json %>,
+                  //defaultDate: m,
+                  timeZone: null
+                })).on('dp.show', function(e) {
+                }).on('dp.change', function(e) {
                   $('#<%= input_id %>_hidden').val(e.date.format('<%= data_format %>'));
-                }).data('DateTimePicker'),
-                date = new Date(<%= time; %>);
-              <% if type.to_s == 'datetime' %>
-                datepicker.date(moment(date))
-              <% end %>
+                }).data('DateTimePicker')
+                datepicker.date(m)
+              
+              console.log("date: ", date, m, tz);
             })();
           </script>
         }

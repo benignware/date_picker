@@ -12,6 +12,7 @@
 //
 //= require jquery/dist/jquery.min
 //= require moment/min/moment.min
+//= require moment-timezone/builds/moment-timezone-with-data.min
 //= require moment/min/locales.min
 //= require eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min
 //= require_tree .

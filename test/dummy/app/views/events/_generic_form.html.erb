@@ -13,20 +13,26 @@
 
   <div class="field form-group">
     <%= f.date_picker :date %>
+    <% if @event.date.present? %>
     <em><%= I18n.l(@event.date) %></em><br/>
     <code><%= @event.date.to_s %></code>
+    <% end %>
   </div>
   
   <div class="field form-group">
     <%= f.datetime_picker :datetime %>
+    <% if @event.date.present? %>
     <em><%= I18n.l(@event.datetime) %></em><br/>
     <code><%= @event.datetime.to_s %></code>
+    <% end %>
   </div>
   
   <div class="field form-group">
     <%= f.time_picker :time %>
+    <% if @event.date.present? %>
     <em><%= I18n.l(@event.time, format: :only_time) %></em><br/>
     <code><%= @event.time.to_s %></code>
+    <% end %>
   </div>
   
   <div class="actions">

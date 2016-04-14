@@ -16,7 +16,7 @@
   "dependencies": {
     "jquery-ui": "~1.11.4",
     "bootstrap": "~3.3.4",
-    "eonasdan-bootstrap-datetimepicker": "~4.17.37",
-    "jquery": "~2.1.4"
+    "jquery": "~2.1.4",
+    "eonasdan-bootstrap-datetimepicker": "master"
   }
 }

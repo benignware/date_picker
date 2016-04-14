@@ -1,6 +1,5 @@
 {
   "name": "eonasdan-bootstrap-datetimepicker",
-  "version": "4.17.37",
   "main": [
     "build/css/bootstrap-datetimepicker.min.css",
     "build/js/bootstrap-datetimepicker.min.js"
@@ -32,13 +31,14 @@
     "test",
     "tests"
   ],
-  "_release": "4.17.37",
+  "_release": "bd2e1d8da9",
   "_resolution": {
-    "type": "version",
-    "tag": "4.17.37",
-    "commit": "fd8bd86dd78f789fb742798b7d49aba0a957af62"
+    "type": "branch",
+    "branch": "master",
+    "commit": "bd2e1d8da97974ff3bc22346253565c446532ff3"
   },
-  "_source": "git://github.com/Eonasdan/bootstrap-datetimepicker.git",
-  "_target": "~4.17.37",
-  "_originalSource": "eonasdan-bootstrap-datetimepicker"
+  "_source": "https://github.com/Eonasdan/bootstrap-datetimepicker.git",
+  "_target": "master",
+  "_originalSource": "eonasdan-bootstrap-datetimepicker",
+  "_direct": true
 }
