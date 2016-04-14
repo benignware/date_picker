@@ -31,11 +31,11 @@ module DatePicker
       if !options.key?(:default)
         case type
           when :date
-            default = Date.today.in_time_zone.to_date
+            default = Date.current
           when :datetime
-            default = DateTime.now.in_time_zone
+            default = DateTime.current
           when :time
-            default = Time.now.in_time_zone
+            default = Time.current
         end
       else
         default = options[:default]
