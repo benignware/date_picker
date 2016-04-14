@@ -202,7 +202,7 @@ Adjust the form to use simple_form-builder:
     </tr>
     <tr>
       <td>time_zone</td>
-      <td>Specifies whether to include timezone-offset in format</td>
+      <td>Specifies whether to include timezone-offset in format. Defaults to `false`.</td>
     </tr>
   </tbody>
 </table>
