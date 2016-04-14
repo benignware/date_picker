@@ -10,7 +10,13 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require bootstrap/dist/css/bootstrap.min
- *= require eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min
+ * Bootstrap
+ *=require bootstrap/dist/css/bootstrap.min
+ *=require eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min
+ * 
+ * jQueryUI
+ *= require jquery-ui/themes/smoothness/jquery-ui.min
+ *= require jquery-ui/themes/smoothness/theme
+ * 
  *= require_self
  */

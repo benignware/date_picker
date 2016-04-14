@@ -11,8 +11,15 @@
 // about supported directives.
 //
 //= require jquery/dist/jquery.min
+//
+// Bootstrap
 //= require moment/min/moment-with-locales.min
 //= require moment-timezone/builds/moment-timezone-with-data.min
 //= require moment/min/locales.min
 //= require eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min
+//
+// jQueryUI
+//= require jquery-ui/jquery-ui.min
+
+
 //= require_tree .
