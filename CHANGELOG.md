@@ -3,6 +3,17 @@ date_picker
 
 > Changelog
 
+master
+------
+
+#### Bugfix
+
+* Fixed timezone issues
+
+#### Enhancements
+
+* Added default-option
+
 v0.0.8
 ------
 
