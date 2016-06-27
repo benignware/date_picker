@@ -18,5 +18,10 @@
  *= require jquery-ui/themes/smoothness/jquery-ui.min
  *= require jquery-ui/themes/smoothness/theme
  * 
+ * PickADate
+ *= require pickadate/lib/themes/classic
+ *= require pickadate/lib/themes/classic.date
+ *= require pickadate/lib/themes/classic.time
+ * 
  *= require_self
  */

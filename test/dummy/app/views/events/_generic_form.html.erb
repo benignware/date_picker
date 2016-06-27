@@ -21,7 +21,7 @@
   
   <div class="field form-group">
     <%= f.datetime_picker :datetime %>
-    <% if @event.date.present? %>
+    <% if @event.datetime.present? %>
     <em><%= I18n.l(@event.datetime) %></em><br/>
     <code><%= @event.datetime.to_s %></code>
     <% end %>

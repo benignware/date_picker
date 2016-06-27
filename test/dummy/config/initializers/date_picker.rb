@@ -1,5 +1,5 @@
 DatePicker.configure do |config|
-  config.style = :bootstrap
+  config.style = :pickadate
   config.formats = {
     date: :default,
     datetime: :default,

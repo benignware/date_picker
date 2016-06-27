@@ -20,6 +20,10 @@
 //
 // jQueryUI
 //= require jquery-ui/jquery-ui.min
-
+//
+// PickADate
+//= require pickadate/lib/compressed/picker
+//= require pickadate/lib/compressed/picker.date
+//= require pickadate/lib/compressed/picker.time
 
 //= require_tree .

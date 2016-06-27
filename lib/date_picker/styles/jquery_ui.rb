@@ -20,8 +20,7 @@ module DatePicker
                 dayNamesMin: <%= abbr_day_names.to_json %>,
                 dayNamesShort: <%= abbr_day_names.to_json %>
               }, <%= picker_options %>, {
-                locale: <%= locale.to_json %>,
-                dateFormat: <%= format.to_json %>
+                dateFormat: '<%= picker_format %>'
               })).on('change', function(e) {
                 $('#<%= input_id %>_hidden').val($.datepicker.formatDate('<%= data_format %>', $('#<%= input_id %>').datepicker('getDate')));
               });

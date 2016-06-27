@@ -18,6 +18,7 @@
     "bootstrap": "~3.3.4",
     "jquery": "~2.1.4",
     "eonasdan-bootstrap-datetimepicker": "^4.17.37",
-    "moment-timezone": "^0.5.3"
+    "moment-timezone": "^0.5.3",
+    "pickadate": "^3.5.6"
   }
 }

@@ -5,7 +5,7 @@ module DatePicker
     
     def date_picker_tag(name, value, options = {}, html_options = nil)
 
-      option_names = [:time_zone, :format, :type, :pattern, :default]
+      option_names = [:time_zone, :format, :type, :default]
       
       opts = options.clone
       html_opts = html_options.clone
@@ -23,7 +23,8 @@ module DatePicker
         # Use text-type as default instead of date, since Datepicker should not mix up with native html5 components
         type: :text,
         # Generate unique ID with UI
-        id: "date_picker_" + Digest::SHA1.hexdigest(name.to_s)[8..16]
+        id: "date_picker_" + Digest::SHA1.hexdigest(name.to_s)[8..16],
+        name: name,
       }.merge(opts.except(*option_names)).merge(html_options)
       
       type = options[:type]
@@ -111,32 +112,31 @@ module DatePicker
         mapping = DatePicker::Mappings.send(obj.mapping)
       end
 
-      # Setup html input
-      input_tag = :input
-      input_id = html_options[:id]
-      input_html = content_tag(input_tag, nil, html_options)
+      picker_format = format.clone
 
       # Escape special chars in format
       if mapping[:_].present?
-        format.gsub!(/(?<!%)([a-z]+)/i, mapping[:_].gsub(/\*/, "\\\\1"))
+        replace = mapping[:_].gsub(/\*/, "\\\\1")
+        special_chars = mapping.keys.select{ |key| !mapping[key].blank? && !key.to_s.start_with?('_') }
+        picker_format.gsub!(/(?<!%)([#{Regexp.escape(special_chars.join())}])/i, replace)
       end
       
       # If time_zone option is specified, replace timezone identifier with mapping in format
       if options[:time_zone]
         # Time zone abbreviation name
-        format.gsub!("%Z", value.present? ? value.to_datetime.strftime("%Z") : "")
+        picker_format.gsub!("%Z", value.present? ? value.to_datetime.strftime("%Z") : "")
         # Time zone as hour and minute offset from UTC (e.g. +0900)
-        format.gsub!("%z", mapping[:z])
+        picker_format.gsub!("%z", mapping[:z])
       else
         # Otherwise strip time zone and trim result
-        format.gsub!("%Z", "")
-        format.gsub!("%z", "")
-        format.strip!
+        picker_format.gsub!("%Z", "")
+        picker_format.gsub!("%z", "")
+        picker_format.strip!
       end
       
       # Replace mappings in format
       mapping.each_pair do |k, v|
-        format.gsub!("%" + k.to_s, v)
+        picker_format.gsub!("%" + k.to_s, v)
       end
       
       # Setup data format pattern
@@ -158,9 +158,10 @@ module DatePicker
       mapping.each_pair do |k, v|
         data_format.gsub!("%" + k.to_s, v)
       end
-      
+
       # Get formatted value
       formatted_value = value.present? ? I18n.l(value, format: format.to_s) : nil
+      html_options[:value] = formatted_value
 
       # Clean object and attribute names
       object_name = name.gsub(/\[\w*\]$/, "")
@@ -232,12 +233,18 @@ module DatePicker
         end
       picker_options = camelized_keys[html_options[:data]].to_json
       
+      
+      # Setup html input
+      input_tag = :input
+      input_id = html_options[:id]
+      input_html = content_tag(input_tag, nil, html_options)
+      
       # Setup other vars
       vars = {
         type: type,
         value: value,
         locale: locale,
-        format: format,
+        picker_format: picker_format,
         data_format: data_format,
         name: name,
         input_id: input_id,

@@ -30,7 +30,7 @@ module DatePicker
                 m = date && moment(date).tz(tz),
                 datepicker = $('#<%= input_id %>_container').datetimepicker($.extend({}, <%= picker_options %>, {
                   locale: <%= locale.to_json %>,
-                  format: <%= format.to_json %>,
+                  format: <%= picker_format.to_json %>,
                   timeZone: null
                 })).on('dp.change', function(e) {
                   var d = e.date
