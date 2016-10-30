@@ -25,5 +25,9 @@
 //= require pickadate/lib/compressed/picker
 //= require pickadate/lib/compressed/picker.date
 //= require pickadate/lib/compressed/picker.time
-
+//
+// Flatpickr
+//= require flatpickr/dist/flatpickr.min
+//= require flatpickr/src/flatpickr.l10n.de
+//
 //= require_tree .

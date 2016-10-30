@@ -11,8 +11,8 @@
  * file per style scope.
  *
  * Bootstrap
- *=require bootstrap/dist/css/bootstrap.min
- *=require eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min
+ *= require bootstrap/dist/css/bootstrap.min
+ *= require eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min
  * 
  * jQueryUI
  *= require jquery-ui/themes/smoothness/jquery-ui.min
@@ -22,6 +22,14 @@
  *= require pickadate/lib/themes/classic
  *= require pickadate/lib/themes/classic.date
  *= require pickadate/lib/themes/classic.time
+ *
+ * Flatpickr
+ *= require flatpickr/dist/flatpickr.min
  * 
  *= require_self
  */
+
+
+.form-group > input:not([type=button]):not([type=password]):not([type=submit]) {
+  min-width: 400px;
+}
