@@ -10,9 +10,8 @@
       </ul>
     </div>
   <% end %>
-
   <div class="field form-group">
-    <%= f.date_picker :date %>
+    <%= f.date_picker :date, min: Date.today - 4.days, max: Date.today + 4.days %>
     <% if @event.date.present? %>
     <em><%= I18n.l(@event.date) %></em><br/>
     <code><%= @event.date.to_s %></code>
@@ -20,7 +19,7 @@
   </div>
   
   <div class="field form-group">
-    <%= f.datetime_picker :datetime %>
+    <%= f.datetime_picker :datetime, min: DateTime.now - 4.days, max: DateTime.now + 4.days  %>
     <% if @event.datetime.present? %>
     <em><%= I18n.l(@event.datetime) %></em><br/>
     <code><%= @event.datetime.to_s %></code>
