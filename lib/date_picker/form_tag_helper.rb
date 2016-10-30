@@ -28,6 +28,7 @@ module DatePicker
         # Generate unique ID with UI
         id: "date_picker_" + Digest::SHA1.hexdigest(name.to_s)[8..16],
         name: name,
+        data: html_options[:data] || options[:data] || {}
       }.merge(opts.except(*option_names)).merge(html_options)
       
       # Get the type
@@ -243,6 +244,7 @@ module DatePicker
               end 
             ] : h 
         end
+        
       picker_options = camelized_keys[html_options[:data]].to_json
       
       # Setup html input
