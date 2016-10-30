@@ -13,7 +13,8 @@ module DatePicker
           <script>
             (function() {
               var
-                picker = flatpickr && flatpickr('#<%= input_id %>', {
+                options = <%= picker_options %>,
+                opts = {
                   dateFormat: "<%= data_format %>",
                   timeFormat: '\u2063',
                   enableTime: <%= type.to_s != 'date' %>,
@@ -25,7 +26,13 @@ module DatePicker
                   altInput: true,
                   altFormat: "<%= picker_format %>",
                   time_24hr: <%= /(?<!\\\\\\\\)H/ === picker_format %>
-                });
+                }
+              for (prop in opts) {
+                options[prop] = opts[prop]
+              }
+              console.log("options: ", options);
+              var
+                picker = flatpickr && flatpickr('#<%= input_id %>', options);
               if (picker) {
                 //picker.setDate(new Date(<%= time %>));
               }
