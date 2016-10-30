@@ -11,7 +11,7 @@ module DatePicker
         %{
           <%= input_html %>
           <script>
-            (function() {
+            (function($) {
               var
                 type = '<%= type %>',
                 plugin = 'picka' + type,
@@ -28,7 +28,7 @@ module DatePicker
                 }),
                 $element = $('#<%= input_id %>'),
                 picker = $element[plugin] && $element[plugin](options)[plugin]('picker');
-            })();
+            })(jQuery);
           </script>
         }
       end

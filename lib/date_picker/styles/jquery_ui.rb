@@ -12,7 +12,7 @@ module DatePicker
           <%= input_html %>
           <input id="<%= input_id %>_hidden" type="hidden" value="<%= value %>" name="<%= name %>"/>
           <script>
-            (function() {
+            (function($) {
               $('#<%= input_id %>').datepicker($.extend({
                 monthNames: <%= month_names.to_json %>,
                 monthNamesShort: <%= abbr_month_names.to_json %>,
@@ -27,7 +27,7 @@ module DatePicker
                 $('#<%= input_id %>_hidden').val($.datepicker.formatDate('<%= data_format %>', $('#<%= input_id %>').datepicker('getDate')));
               });
               <% if time %> $('#<%= input_id %>').datepicker('setDate', new Date(<%= time %>)); <% end %>
-            })();
+            })(jQuery);
           </script>
         }
       end
