@@ -28,6 +28,6 @@
 //
 // Flatpickr
 //= require flatpickr/dist/flatpickr.min
-//= require flatpickr/src/flatpickr.l10n.fr
+//= require flatpickr/src/flatpickr.l10n.de
 //
 //= require_tree .
