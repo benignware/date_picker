@@ -3,7 +3,7 @@ module DatePicker
     def self.flatpickr
       {
         # Escape sequence
-        _: '\\\\\\\\*', 
+        __: '\\\\\\\\*', 
         # Year with century
         Y: 'Y',
         # Year without a century (00..99)
@@ -20,6 +20,8 @@ module DatePicker
         A: 'l',
         # Month of the year (01..12)
         m: 'm',
+        # Month of the year no-padded (1..12)
+        '-m': 'n',
         # The full month name (“January”)
         B: 'F',
         # The abbreviated month name (“Jan”)

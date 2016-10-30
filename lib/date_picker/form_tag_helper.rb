@@ -151,10 +151,16 @@ module DatePicker
       picker_format = format.clone
 
       # Escape special chars in format
-      if mapping[:_].present?
-        replace = mapping[:_].gsub(/\*/, "\\\\1")
-        special_chars = mapping.keys.select{ |key| !mapping[key].blank? && !key.to_s.start_with?('_') }
-        picker_format.gsub!(/(?<!%)([#{Regexp.escape(special_chars.join())}])/i, replace)
+      if mapping[:__].present?
+        replace = mapping[:__].gsub(/\*/, "\\\\1")
+        # Get strftime patterns
+        keys = mapping.keys.select{ |key| !mapping[key].blank? && !key.to_s.start_with?('__') }
+        # Get picker patterns
+        values = keys.map{ |key| mapping[key] }
+        # Escape any special characters of picker format not preceded by %
+        picker_format.gsub!(/(?<!%)(#{(values.map { |string| Regexp.escape(string) }).join('|')})/i, replace)
+        # Escape strftime patterns not preceded by %
+        picker_format.gsub!(/(?<!%)(#{(keys.map { |string| Regexp.escape(string) }).join('|')})/i, replace)
       end
       
       # If time_zone option is specified, replace timezone identifier with mapping in format
@@ -170,7 +176,7 @@ module DatePicker
         picker_format.strip!
       end
       
-      # Replace mappings in format
+      # Actually replace patterns
       mapping.each_pair do |k, v|
         picker_format.gsub!("%" + k.to_s, v)
       end

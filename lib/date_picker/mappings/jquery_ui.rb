@@ -3,7 +3,7 @@ module DatePicker
     def self.jquery_ui
       {
         # Escape sequence
-        _: "'*'",
+        __: "'*'",
         # Year with century
         Y: 'yy',
         # Year without a century (00..99)

@@ -3,7 +3,7 @@ module DatePicker
     def self.moment
       {
         # Escape sequence
-        _: '[*]', 
+        __: '[*]', 
         # Year with century
         Y: 'YYYY',
         # Year without a century (00..99)

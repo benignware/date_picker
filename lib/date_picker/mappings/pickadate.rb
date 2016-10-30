@@ -3,7 +3,7 @@ module DatePicker
     def self.pickadate
       {
         # Escape sequence
-        _: '!*', 
+        __: '!*', 
         # Year with century
         Y: 'yyyy',
         # Year without a century (00..99)
