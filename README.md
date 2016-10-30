@@ -1,7 +1,7 @@
 # date_picker
 > Rails DatePicker-Integration
 
-* Supports bootstrap-datetimepicker and jquery_ui-datepicker
+* Supports [bootstrap-datetimepicker](https://github.com/Eonasdan/bootstrap-datetimepicker), [flatpickr](https://chmln.github.io/flatpickr/), [jqueryui-datepicker](https://jqueryui.com/datepicker/) and [pickadate](http://amsul.ca/pickadate.js/)
 * Seamless i18n-Integration
 * FormBuilder- and SimpleForm-Helpers for date, datetime and time-attributes
 * HTML5-Fallback on Mobile
@@ -14,8 +14,9 @@ Add the following to your Gemfile:
 gem 'date_picker'
 ```
 
-The module does not bundle any third-party assets. 
-Recommended way to download required client-side-dependencies is by using [bower](http://bower.io). 
+DatePicker does not bundle any third-party assets. 
+It is recommended to utilize a package manager to download client-side dependencies.
+Examples assume, you're using [bower](http://bower.io). 
 
 Integrate bower into your rails-app by running `bower init` from command-line:
 
@@ -39,29 +40,34 @@ config.assets.paths << Rails.root.join('vendor', 'assets', 'components')
 
 ### Bootstrap DateTimePicker
 
-Bootstrap is supported by the integration of [eonasdan-bootstrap-datetimepicker](https://github.com/Eonasdan/bootstrap-datetimepicker) >= 4.17.37
+[bootstrap-datetimepicker](https://github.com/Eonasdan/bootstrap-datetimepicker)
 
-Run the config-generator using `:bootstrap`
+Run the config-generator
+
 ```cli
 rails g date_picker:config :bootstrap
 ```
 
 Install dependencies via bower
+
 ```cli
 bower install bootstrap --save
 bower install eonasdan-bootstrap-datetimepicker --save
 ```
 
-Require javascript dependencies:
+Require javascript dependencies
+
 ```javascript
 // app/assets/javascripts/application.js
+//= require jquery/dist/jquery.min
 //= require moment/min/moment-with-locales.min
 //= require moment-timezone/builds/moment-timezone-with-data.min
 //= require moment/min/locales.min
 //= require eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min
 ```
 
-Require css dependencies:
+Require css dependencies
+
 ```css
 /* app/assets/stylesheets/application.css
  *= require bootstrap/dist/css/bootstrap.min
@@ -69,9 +75,41 @@ Require css dependencies:
  */
 ```
 
+### Flatpickr
+
+[flatpickr](https://chmln.github.io/flatpickr/)
+
+Run the config-generator
+
+```cli
+rails g date_picker:config :flatpickr
+```
+
+Install dependencies via bower
+
+```cli
+bower install flatpickr-calendar --save
+```
+
+Require javascript dependencies
+
+```javascript
+// app/assets/javascripts/application.js
+//= require flatpickr/dist/flatpickr.min
+//= require flatpickr/src/flatpickr.l10n.de
+```
+
+Require css dependencies
+
+```css
+/* app/assets/stylesheets/application.css
+ *= require flatpickr/dist/flatpickr.min
+ */
+```
+
 ### jQueryUI DatePicker
 
-Also supported is [jquery-ui](https://jqueryui.com/)'s datepicker.
+[jqueryui-datepicker](https://jqueryui.com/datepicker/)
 
 Run the config-generator using `:jquery_ui`
 ```cli
@@ -83,14 +121,16 @@ Install dependencies via bower
 bower install jquery-ui --save
 ```
 
-Require javascript dependencies:
+Require javascript dependencies
+
 ```javascript
 // app/assets/javascripts/application.js
 //= require jquery/dist/jquery.min
 //= require jquery-ui/jquery-ui.min
 ```
 
-Require css dependencies:
+Require css dependencies
+
 ```css
 /* app/assets/stylesheets/application.css
  *= require jquery-ui/themes/smoothness/jquery-ui.min
@@ -98,11 +138,47 @@ Require css dependencies:
  */
 ```
 
+### PickADate
+
+[pickadate](http://amsul.ca/pickadate.js/)
+
+
+Run the config-generator
+```cli
+rails g date_picker:config :pickadate
+```
+
+Install dependencies via bower
+```cli
+bower install pickadate --save
+```
+
+Require javascript dependencies
+
+```javascript
+// app/assets/javascripts/application.js
+//= require jquery/dist/jquery.min
+//= require pickadate/lib/compressed/picker
+//= require pickadate/lib/compressed/picker.date
+//= require pickadate/lib/compressed/picker.time
+```
+
+Require css dependencies
+
+```css
+/* app/assets/stylesheets/application.css
+ *= require pickadate/lib/themes/classic
+ *= require pickadate/lib/themes/classic.date
+ *= require pickadate/lib/themes/classic.time
+ */
+```
+
+
 ## Form helpers
 
 The date_picker-Module provides tag helpers, form-builder helpers and simple_form-helpers for attributes of type `:date`, `:datetime` and `:time`.
 
-> Please note that `jquery-ui` can only handle dates, while `eonasdan-bootstrap-datetimepicker` also supports attributes of type `:datetime` and `:time`. Form helpers will fall back to the corresponding standard-rails date_select-helpers. 
+> Please note that jqueryui-datepicker can only handle dates, while bootstrap-datetimepicker also supports attributes of type `:datetime` and `:time`. Form helpers will fall back to the corresponding standard-rails date_select-helpers. 
 
 ### FormTagHelper
 
@@ -190,19 +266,27 @@ Adjust the form to use simple_form-builder:
   <tbody>
     <tr>
       <td>type</td>
-      <td>The data-type of the input, e.g. :date</td>
+      <td>Data type. One of `:date`, `:datetime` or `:time`</td>
     </tr>
     <tr>
       <td>default</td>
-      <td>The default value for the input. Defaults to current</td>
+      <td>Specify default date.</td>
     </tr>
     <tr>
       <td>format</td>
-      <td>Provide a strftime-pattern as string or a i18n-identifier as a symbol</td>
+      <td>Provide a strftime-pattern or an i18n-identifier.</td>
+    </tr>
+    <tr>
+      <td>max</td>
+      <td>Specify maximum date</td>
+    </tr>
+    <tr>
+      <td>min</td>
+      <td>Specify minimum date</td>
     </tr>
     <tr>
       <td>time_zone</td>
-      <td>Specifies whether to include timezone-offset in format. Defaults to `false`.</td>
+      <td>Specify whether to include timezone-offset in format. Defaults to `false`.</td>
     </tr>
   </tbody>
 </table>
@@ -218,7 +302,7 @@ Install `rails-i18n`-gem to get a basic support for many languages.
 gem 'rails-i18n', '~> 4.0.0' # For 4.0.x
 ```
 
-By default, the plugin looks for strftime-patterns in the following locations:
+Define date and time formats in yml locale:
 ```
 # config/locales/en.yml
 en:
@@ -231,7 +315,7 @@ en:
       only_time: "%H:%M:%S %z"
 ```
 
-You may want to change the i18n-identifier names by editing the configuration:
+You may want to change the default i18n-identifier names by editing the configuration:
 
 ```rb
 # config/initializers/date_picker.rb
@@ -242,10 +326,6 @@ DatePicker.configure do |config|
     time: :only_time
   }
 end
-```
-
-``` 
-bower install eonasdan-bootstrap-datetimepicker#development --save
 ```
 
 ## Mobile
