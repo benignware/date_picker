@@ -5,19 +5,22 @@ module DatePicker
     
     def date_picker_tag(name, value, options = {}, html_options = nil)
 
-      option_names = [:time_zone, :format, :type, :default]
+      # Clean object and attribute names
+      object_name = name.gsub(/\[\w*\]$/, "")
+      attribute_name = name.gsub(/.*\[(\w*)\]$/, "\\1")
       
+      # Setup Options      
+      option_names = [:time_zone, :format, :type, :default, :min, :max]
       opts = options.clone
       html_opts = html_options.clone
-
       options||= {}
       options = opts.slice(*option_names)
       options = ({
         type: :date,
         time_zone: false,
       }).merge(options)
-            
       html_options||= {}
+
       # Merge html_options with options
       html_options = {
         # Use text-type as default instead of date, since Datepicker should not mix up with native html5 components
@@ -27,8 +30,10 @@ module DatePicker
         name: name,
       }.merge(opts.except(*option_names)).merge(html_options)
       
+      # Get the type
       type = options[:type]
       
+      # Set default values
       if !options.key?(:default)
         case type
           when :date
@@ -42,7 +47,7 @@ module DatePicker
         default = options[:default]
       end
       
-      # Override with value from html_options
+      # Override value from html_options
       if html_options.key?(:value)
         value = html_options[:value]
       end
@@ -77,27 +82,57 @@ module DatePicker
         format = format.to_s
       end
       
-      
       # Get Style
       if options[:style].present?
         style = options[:style]
       elsif DatePicker.config.style.present?
         style = DatePicker.config.style
       else
-        style = :bootstrap
+        style = :none
       end
       path = File.join(File.dirname(__FILE__), "styles", style.to_s)
-      
+
       # Require the selected style and retrieve as object
-      require path
-      obj = Object::const_get('DatePicker::Styles::' + style.to_s.classify).new
+      if style && style != 'none' && File.exist?(path + '.rb')
+        require path
+        obj = Object::const_get('DatePicker::Styles::' + style.to_s.classify).new
+      end
       
       # Merge with types and options from style template
       types = [:date]
-      if obj.respond_to?(:types)
+      if obj && obj.respond_to?(:types)
         types = obj.send(:types)
       end
       
+      # Mobile Fallback
+      is_mobile = (request.headers["HTTP_USER_AGENT"].present? && request.headers["HTTP_USER_AGENT"] =~ /\b(Mobile|webOS|Android|iPhone|iPad|iPod|Windows Phone|Opera Mobi|Kindle|BackBerry|PlayBook)\b/i).present?
+      if is_mobile
+        case options[:type]
+        when :date
+          return date_field(object_name, attribute_name, html_options.merge({type: 'date', value: value.present? ? value : ''}))
+        when :datetime
+          return datetime_field(object_name, attribute_name, html_options.merge({type: 'datetime-local', value: value.present? ? value.strftime("%Y-%m-%dT%H:%M:%S") : ''}))
+        when :time
+          return time_field(object_name, attribute_name, html_options.merge({type: 'time', value: value.present? ? value.strftime("%H:%M") : ''}))
+        end
+      end
+
+      # Desktop Fallback
+      if !obj || !types.include?(options[:type])
+        # Presence of attribute name prevents auto-generating        
+        html_options.delete(:name)
+        # Choose the right form helper by type
+        case options[:type]
+        when :date
+          return date_select(object_name, attribute_name, {default: value}, html_options)
+        when :datetime
+          return datetime_select(object_name, attribute_name, {default: value}, html_options)
+        when :time
+          return time_select(object_name, attribute_name, {default: value}, html_options)
+        end
+      end
+
+      # Get options from implementation
       if obj.respond_to?(:options)
         html_options = html_options.merge(obj.send(:options))
       end
@@ -112,6 +147,7 @@ module DatePicker
         mapping = DatePicker::Mappings.send(obj.mapping)
       end
 
+      # Setup picker format
       picker_format = format.clone
 
       # Escape special chars in format
@@ -163,36 +199,6 @@ module DatePicker
       formatted_value = value.present? ? I18n.l(value, format: format.to_s) : nil
       html_options[:value] = formatted_value
 
-      # Clean object and attribute names
-      object_name = name.gsub(/\[\w*\]$/, "")
-      attribute_name = name.gsub(/.*\[(\w*)\]$/, "\\1")
-      
-      # Mobile Fallback
-      is_mobile = (request.headers["HTTP_USER_AGENT"].present? && request.headers["HTTP_USER_AGENT"] =~ /\b(Mobile|webOS|Android|iPhone|iPad|iPod|Windows Phone|Opera Mobi|Kindle|BackBerry|PlayBook)\b/i).present?
-      if is_mobile
-        case options[:type]
-        when :date
-          return date_field(object_name, attribute_name, html_options.merge({type: 'date', value: value.present? ? value : ''}))
-        when :datetime
-          return datetime_field(object_name, attribute_name, html_options.merge({type: 'datetime-local', value: value.present? ? value.strftime("%Y-%m-%dT%H:%M:%S") : ''}))
-        when :time
-          return time_field(object_name, attribute_name, html_options.merge({type: 'time', value: value.present? ? value.strftime("%H:%M") : ''}))
-        end
-      end
-      
-      # Desktop Fallback
-      if !types.include?(options[:type])
-        case options[:type]
-        when :date
-          return date_select(object_name, attribute_name, {default: value}, html_options)
-        when :datetime
-          return datetime_select(object_name, attribute_name, {default: value}, html_options)
-        when :time
-          return time_select(object_name, attribute_name, {default: value}, html_options)
-        end
-      end
-      
-      
       # Get builder template reference
       tmpl = obj.template
       
@@ -233,14 +239,13 @@ module DatePicker
         end
       picker_options = camelized_keys[html_options[:data]].to_json
       
-      
       # Setup html input
       input_tag = :input
       input_id = html_options[:id]
       input_html = content_tag(input_tag, nil, html_options)
       
-      # Setup other vars
-      vars = {
+      # Setup template variables
+      vars = options.merge({
         type: type,
         value: value,
         locale: locale,
@@ -256,10 +261,12 @@ module DatePicker
         abbr_month_names: abbr_month_names,
         day_names: day_names,
         abbr_day_names: abbr_day_names
-      }
+      })
       
+      # Actually render the picker
       result = ERB.new(tmpl).result(OpenStruct.new(vars).instance_eval { binding })
       
+      # Return picker html
       return result.html_safe
       
     end
