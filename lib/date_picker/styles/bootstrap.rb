@@ -22,7 +22,7 @@ module DatePicker
           </div>
           <input id="<%= input_id %>_hidden" type="hidden" value="<%= formatted_value %>" name="<%= name %>"/>
           <script>
-            (function() {
+            (function($) {
               var
                 type = '<% type.to_s %>',
                 tz = '<%= time_zone %>',
@@ -30,7 +30,9 @@ module DatePicker
                 m = date && <% if type.to_s == 'time' then %> moment(date).tz(tz) <% else %> moment(date) <% end %>,
                 datepicker = $('#<%= input_id %>_container').datetimepicker($.extend({}, <%= picker_options %>, {
                   locale: <%= locale.to_json %>,
-                  format: <%= picker_format.to_json %>
+                  format: <%= picker_format.to_json %>,
+                  minDate: <%= min ? 'new Date("' + min.to_s + '")' : 'undefined' %>,
+                  maxDate: <%= max ? 'new Date("' + max.to_s + '")' : 'undefined' %>
                 })).on('dp.change', function(e) {
                   var d = e.date
                   $('#<%= input_id %>_hidden').val(d.format('<%= data_format %>'));
@@ -38,7 +40,7 @@ module DatePicker
                 if (date) {
                   datepicker.date(m)
                 }
-            })();
+            })(jQuery);
           </script>
         }
       end

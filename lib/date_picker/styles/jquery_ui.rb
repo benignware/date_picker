@@ -18,7 +18,9 @@ module DatePicker
                 monthNamesShort: <%= abbr_month_names.to_json %>,
                 dayNames: <%= day_names.to_json %>,
                 dayNamesMin: <%= abbr_day_names.to_json %>,
-                dayNamesShort: <%= abbr_day_names.to_json %>
+                dayNamesShort: <%= abbr_day_names.to_json %>,
+                minDate: <%= min ? 'new Date("' + min.to_s + '")' : 'undefined' %>,
+                maxDate: <%= max ? 'new Date("' + max.to_s + '")' : 'undefined' %>
               }, <%= picker_options %>, {
                 dateFormat: '<%= picker_format %>'
               })).on('change', function(e) {
