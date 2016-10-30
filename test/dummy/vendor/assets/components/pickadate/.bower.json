@@ -57,7 +57,6 @@
     "commit": "b704a8a8a19df24481f8291dd3e6c008501f04f1"
   },
   "_source": "https://github.com/amsul/pickadate.js.git",
-  "_target": "^3.5.6",
-  "_originalSource": "pickadate",
-  "_direct": true
+  "_target": "~3.5.6",
+  "_originalSource": "pickadate"
 }
