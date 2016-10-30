@@ -27,11 +27,10 @@ module DatePicker
                 type = '<% type.to_s %>',
                 tz = '<%= time_zone %>',
                 date = <% if value.present? %>new Date('<%= value.strftime('%Y/%m/%d %H:%M:%S %z'); %>')<% else %>null<% end %>,
-                m = date && moment(date).tz(tz),
+                m = date && <% if type.to_s == 'time' then %> moment(date).tz(tz) <% else %> moment(date) <% end %>,
                 datepicker = $('#<%= input_id %>_container').datetimepicker($.extend({}, <%= picker_options %>, {
                   locale: <%= locale.to_json %>,
-                  format: <%= picker_format.to_json %>,
-                  timeZone: null
+                  format: <%= picker_format.to_json %>
                 })).on('dp.change', function(e) {
                   var d = e.date
                   $('#<%= input_id %>_hidden').val(d.format('<%= data_format %>'));
