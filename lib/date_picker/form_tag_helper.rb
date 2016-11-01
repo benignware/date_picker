@@ -11,7 +11,7 @@ module DatePicker
       attribute_name = name.gsub(/.*\[(\w*)\]$/, "\\1")
       
       # Setup Options      
-      option_names = [:time_zone, :format, :type, :default, :min, :max]
+      option_names = [:time_zone, :format, :type, :default, :min, :max].concat([:use_month_names, :order])
       opts = options.clone
       html_opts = html_options.clone
       options||= {}
@@ -44,6 +44,7 @@ module DatePicker
       if opts[:maxlength].present? && !opts[:maxlength]
         opts.except!(:maxlength)
       end
+      
       
       # Get the type
       type = options[:type]
