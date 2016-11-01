@@ -9,7 +9,7 @@ module DatePicker
       end
       def template() 
         %{
-          <%= input_html %>
+          <%= instance.content_tag(input_tag, nil, html_options) %>
           <input id="<%= input_id %>_hidden" type="hidden" value="<%= value %>" name="<%= name %>"/>
           <script>
             (function($) {

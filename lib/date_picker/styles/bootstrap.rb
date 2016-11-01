@@ -4,21 +4,21 @@ module DatePicker
       def types
         [:date, :datetime, :time]
       end
-      def options()
+      def options
         {
           class: 'form-control'
         }
       end
-      def mapping()
+      def mapping
         :moment
       end
-      def template() 
+      def template(
         %{
           <div id="<%= input_id %>_container" class="input-group">
             <div class="input-group-addon" style="cursor: pointer">
               <span class="glyphicon glyphicon-calendar"></span>
             </div>
-            <%= input_html %>
+            <%= instance.content_tag(input_tag, nil, html_options) %>
           </div>
           <input id="<%= input_id %>_hidden" type="hidden" value="<%= formatted_value %>" name="<%= name %>"/>
           <script>

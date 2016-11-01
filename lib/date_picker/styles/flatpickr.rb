@@ -9,7 +9,7 @@ module DatePicker
       end
       def template
         %{
-          <input id="<%= input_id %>" name="<%= name %>"/>
+          <%= instance.content_tag(input_tag, nil, html_options.except(:value)) %>
           <script>
             (function() {
               var
@@ -25,6 +25,7 @@ module DatePicker
                   maxDate: <%= max ? 'new Date("' + max.to_s + '")' : 'undefined' %>,
                   altInput: true,
                   altFormat: "<%= picker_format %>",
+                  altInputClass: "<%= html_options[:class] %>",
                   time_24hr: <%= /(?<!\\\\\\\\)H/ === picker_format %>
                 }
               for (prop in opts) {

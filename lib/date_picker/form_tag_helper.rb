@@ -4,7 +4,8 @@ module DatePicker
   module FormTagHelper
     
     def date_picker_tag(name, value, options = {}, html_options = nil)
-
+      
+      
       # Clean object and attribute names
       object_name = name.gsub(/\[\w*\]$/, "")
       attribute_name = name.gsub(/.*\[(\w*)\]$/, "\\1")
@@ -21,7 +22,7 @@ module DatePicker
       }).merge(options)
       html_options||= {}
 
-      # Merge html_options with options
+      # Merge html_options with options and defaults
       html_options = {
         # Use text-type as default instead of date, since Datepicker should not mix up with native html5 components
         type: :text,
@@ -30,6 +31,19 @@ module DatePicker
         name: name,
         data: html_options[:data] || options[:data] || {}
       }.merge(opts.except(*option_names)).merge(html_options)
+      
+      # Allow for setting some attributes as boolean, such as readonly
+      if opts[:placeholder].present? && !opts[:placeholder]
+        opts.except!(:placeholder)
+      end
+      if opts[:readonly].present? && opts[:readonly]
+        opts[:readonly] = 'readonly'
+      else
+        opts.except!(:readonly)
+      end
+      if opts[:maxlength].present? && !opts[:maxlength]
+        opts.except!(:maxlength)
+      end
       
       # Get the type
       type = options[:type]
@@ -254,6 +268,7 @@ module DatePicker
       
       # Setup template variables
       vars = options.merge({
+        instance: self,
         type: type,
         value: value,
         locale: locale,
