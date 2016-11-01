@@ -33,7 +33,8 @@ module DatePicker
                   format: <%= picker_format.to_json %>,
                   minDate: <%= min ? 'new Date("' + min.to_s + '")' : 'undefined' %>,
                   maxDate: <%= max ? 'new Date("' + max.to_s + '")' : 'undefined' %>,
-                  useCurrent: false
+                  useCurrent: false,
+                  defaultDate: m
                 })).on('dp.change', function(e) {
                   var d = e.date
                   console.log("debug date: ", d);
