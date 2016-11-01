@@ -35,6 +35,7 @@ module DatePicker
                   maxDate: <%= max ? 'new Date("' + max.to_s + '")' : 'undefined' %>
                 })).on('dp.change', function(e) {
                   var d = e.date
+                  console.log("debug date: ", d);
                   $('#<%= input_id %>_hidden').val(d.format('<%= data_format %>'));
                 }).data('DateTimePicker')
                 if (date) {
