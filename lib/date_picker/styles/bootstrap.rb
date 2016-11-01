@@ -18,7 +18,7 @@ module DatePicker
             <div class="input-group-addon" style="cursor: pointer">
               <span class="glyphicon glyphicon-calendar"></span>
             </div>
-            <%= instance.content_tag(input_tag, nil, html_options) %>
+            <%= instance.content_tag(input_tag, nil, html_options.except(:value)) %>
           </div>
           <input id="<%= input_id %>_hidden" type="hidden" value="<%= formatted_value %>" name="<%= name %>"/>
           <script>
