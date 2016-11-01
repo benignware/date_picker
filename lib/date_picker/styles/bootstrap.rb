@@ -26,19 +26,16 @@ module DatePicker
               var
                 type = '<% type.to_s %>',
                 tz = '<%= time_zone %>',
-                date = <% if value.present? %>new Date(<%= time %>)<% else %>null<% end %>,
+                date = <% if value.present? %>new Date('<%= value.strftime('%Y/%m/%d %H:%M:%S %z'); %>')<% else %>null<% end %>,
                 m = date && <% if type.to_s == 'time' then %> moment(date).tz(tz) <% else %> moment(date) <% end %>,
-                m = moment(date)
                 datepicker = $('#<%= input_id %>_container').datetimepicker($.extend({}, <%= picker_options %>, {
                   locale: <%= locale.to_json %>,
                   format: <%= picker_format.to_json %>,
                   minDate: <%= min ? 'new Date("' + min.to_s + '")' : 'undefined' %>,
                   maxDate: <%= max ? 'new Date("' + max.to_s + '")' : 'undefined' %>,
-                  useCurrent: false,
-                  defaultDate: m
+                  useCurrent: false
                 })).on('dp.change', function(e) {
                   var d = e.date
-                  console.log("debug date: ", d);
                   $('#<%= input_id %>_hidden').val(d.format('<%= data_format %>'));
                 }).data('DateTimePicker')
                 if (date) {
