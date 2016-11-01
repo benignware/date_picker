@@ -6,6 +6,15 @@ date_picker
 master
 ------
 
+* Integrate flatpickr with simple form 
+
+v0.0.9
+------
+
+#### Enhancements
+
+* Added Flatpickr and Pickadate Integration
+
 #### Bugfix
 
 * Fixed timezone issues
