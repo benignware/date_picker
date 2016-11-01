@@ -27,16 +27,12 @@ module DatePicker
                   altFormat: "<%= picker_format %>",
                   altInputClass: "<%= html_options[:class] %>",
                   time_24hr: <%= /(?<!\\\\\\\\)H/ === picker_format %>
-                }
+                },
+                picker;
               for (prop in opts) {
                 options[prop] = opts[prop]
               }
-              console.log("options: ", options);
-              var
-                picker = flatpickr && flatpickr('#<%= input_id %>', options);
-              if (picker) {
-                //picker.setDate(new Date(<%= time %>));
-              }
+              picker = flatpickr && flatpickr('#<%= input_id %>', options);
             })();
           </script>
         }
