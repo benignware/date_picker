@@ -28,6 +28,7 @@ module DatePicker
                 tz = '<%= time_zone %>',
                 date = <% if value.present? %>new Date(<%= time %>)<% else %>null<% end %>,
                 m = date && <% if type.to_s == 'time' then %> moment(date).tz(tz) <% else %> moment(date) <% end %>,
+                m = moment(date)
                 datepicker = $('#<%= input_id %>_container').datetimepicker($.extend({}, <%= picker_options %>, {
                   locale: <%= locale.to_json %>,
                   format: <%= picker_format.to_json %>,
