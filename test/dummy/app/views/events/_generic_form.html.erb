@@ -13,27 +13,24 @@
   <div class="field form-group">
     <%= f.date_picker :date, min: Date.today - 4.days, max: Date.today + 4.days %>
     <% if @event.date.present? %>
-    <em><%= I18n.l(@event.date) %></em><br/>
     <code><%= @event.date.to_s %></code>
     <% end %>
   </div>
-  
+
   <div class="field form-group">
     <%= f.datetime_picker :datetime, min: DateTime.now - 4.days, max: DateTime.now + 4.days  %>
     <% if @event.datetime.present? %>
-    <em><%= I18n.l(@event.datetime) %></em><br/>
     <code><%= @event.datetime.to_s %></code>
     <% end %>
   </div>
-  
+
   <div class="field form-group">
     <%= f.time_picker :time %>
     <% if @event.time.present? %>
-    <em><%= I18n.l(@event.time, format: :only_time) %></em><br/>
     <code><%= @event.time.to_s %></code>
     <% end %>
   </div>
-  
+
   <div class="actions">
     <%= f.submit %>
   </div>
