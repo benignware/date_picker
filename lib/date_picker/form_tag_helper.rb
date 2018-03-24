@@ -174,9 +174,8 @@ module DatePicker
         # Get picker patterns
         values = keys.map{ |key| mapping[key] }
         # Escape any special characters of picker format not preceded by %
-        picker_format.gsub!(/(?<!%)(#{(values.map { |string| Regexp.escape(string) }).join('|')})/i, replace)
         # Escape strftime patterns not preceded by %
-        picker_format.gsub!(/(?<!%)(#{(keys.map { |string| Regexp.escape(string) }).join('|')})/i, replace)
+        picker_format.gsub!(/(?<!%)(#{((keys+values).uniq.map { |string| Regexp.escape(string) }).join('|')})/i, replace)
       end
       
       # If time_zone option is specified, replace timezone identifier with mapping in format
