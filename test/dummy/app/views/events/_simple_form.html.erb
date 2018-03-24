@@ -13,22 +13,21 @@
 
   <div class="field form-group">
     <%= f.input :date, as: :date_picker %>
-    <em><%= I18n.l(@event.date) %></em><br/>
+    
     <code><%= @event.date.to_s %></code>
   </div>
-  
+
   <div class="field form-group">
     <%= f.input :datetime, as: :date_picker %>
-    <em><%= I18n.l(@event.datetime) %></em><br/>
     <code><%= @event.datetime.to_s %></code>
   </div>
-  
+
   <div class="field form-group">
     <%= f.input :time, as: :date_picker %>
-    <em><%= I18n.l(@event.time, format: :only_time) %></em><br/>
+
     <code><%= @event.time.to_s %></code>
   </div>
-  
+
   <div class="actions">
     <%= f.submit nil, class: 'btn btn-default' %>
   </div>
